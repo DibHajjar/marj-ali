@@ -1,0 +1,1099 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>برا السالفة</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0d0d14;
+    --surface: #16161f;
+    --surface2: #1e1e2a;
+    --border: rgba(255,255,255,0.08);
+    --accent: #f0c040;
+    --accent2: #e05a2b;
+    --text: #f0ede8;
+    --muted: #888080;
+    --success: #3dbf7a;
+    --danger: #e05a5a;
+    --radius: 16px;
+    --radius-sm: 10px;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Tajawal', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 0 16px 40px;
+    overflow-x: hidden;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    top: -200px; left: -200px;
+    width: 500px; height: 500px;
+    background: radial-gradient(circle, rgba(240,192,64,0.07) 0%, transparent 70%);
+    pointer-events: none;
+    z-index: 0;
+  }
+  body::after {
+    content: '';
+    position: fixed;
+    bottom: -200px; right: -200px;
+    width: 500px; height: 500px;
+    background: radial-gradient(circle, rgba(224,90,43,0.07) 0%, transparent 70%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .game-wrap {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    max-width: 520px;
+    padding-top: 32px;
+  }
+
+  .logo {
+    text-align: center;
+    margin-bottom: 32px;
+  }
+  .logo h1 {
+    font-family: 'Cairo', sans-serif;
+    font-size: 42px;
+    font-weight: 900;
+    letter-spacing: -1px;
+    background: linear-gradient(135deg, var(--accent) 0%, var(--accent2) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .logo p {
+    color: var(--muted);
+    font-size: 15px;
+    margin-top: 4px;
+  }
+
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 28px 24px;
+    margin-bottom: 16px;
+  }
+
+  .card-title {
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .card-title .badge {
+    background: var(--accent);
+    color: #1a1200;
+    font-size: 12px;
+    font-weight: 700;
+    padding: 3px 10px;
+    border-radius: 20px;
+  }
+
+  input[type="text"], input[type="number"] {
+    width: 100%;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    color: var(--text);
+    font-family: 'Tajawal', sans-serif;
+    font-size: 16px;
+    padding: 12px 16px;
+    outline: none;
+    transition: border-color 0.2s;
+    text-align: right;
+  }
+  input:focus { border-color: var(--accent); }
+
+  .input-row {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 10px;
+  }
+  .input-row input { flex: 1; }
+
+  .btn {
+    font-family: 'Tajawal', sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    border: none;
+    border-radius: var(--radius-sm);
+    padding: 12px 22px;
+    cursor: pointer;
+    transition: all 0.15s;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+  }
+  .btn:active { transform: scale(0.97); }
+
+  .btn-primary {
+    background: var(--accent);
+    color: #1a1200;
+    width: 100%;
+    font-size: 17px;
+    padding: 14px;
+    border-radius: var(--radius-sm);
+    margin-top: 8px;
+  }
+  .btn-primary:hover { background: #f5cc55; }
+
+  .btn-secondary {
+    background: var(--surface2);
+    color: var(--text);
+    border: 1px solid var(--border);
+  }
+  .btn-secondary:hover { border-color: var(--accent); }
+
+  .btn-danger {
+    background: transparent;
+    color: var(--danger);
+    border: 1px solid rgba(224,90,90,0.3);
+    padding: 8px 14px;
+    font-size: 14px;
+    border-radius: 8px;
+  }
+  .btn-danger:hover { background: rgba(224,90,90,0.1); }
+
+  .btn-success {
+    background: var(--success);
+    color: #001a0a;
+  }
+  .btn-success:hover { filter: brightness(1.1); }
+
+  .players-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 16px;
+  }
+  .player-item {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 10px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 15px;
+  }
+  .player-num {
+    color: var(--accent);
+    font-weight: 700;
+    font-size: 13px;
+    min-width: 24px;
+  }
+
+  .screen { display: none; }
+  .screen.active { display: block; }
+
+  .big-center {
+    text-align: center;
+    padding: 20px 0;
+  }
+  .big-center h2 {
+    font-size: 26px;
+    font-weight: 800;
+    margin-bottom: 8px;
+  }
+  .big-center p {
+    color: var(--muted);
+    font-size: 15px;
+    line-height: 1.6;
+  }
+
+  .role-reveal {
+    background: var(--surface2);
+    border-radius: var(--radius);
+    padding: 40px 24px;
+    text-align: center;
+    margin: 20px 0;
+    border: 1px solid var(--border);
+    position: relative;
+    overflow: hidden;
+  }
+  .role-reveal.insider {
+    border-color: rgba(240,192,64,0.4);
+    background: linear-gradient(160deg, rgba(240,192,64,0.08) 0%, var(--surface2) 60%);
+  }
+  .role-reveal.outsider {
+    border-color: rgba(224,90,43,0.4);
+    background: linear-gradient(160deg, rgba(224,90,43,0.1) 0%, var(--surface2) 60%);
+  }
+  .role-icon {
+    font-size: 52px;
+    margin-bottom: 16px;
+    display: block;
+  }
+  .role-word {
+    font-family: 'Cairo', sans-serif;
+    font-size: 36px;
+    font-weight: 900;
+    color: var(--accent);
+    margin-bottom: 8px;
+    letter-spacing: -1px;
+  }
+  .role-label {
+    font-size: 14px;
+    color: var(--muted);
+  }
+
+  .cover-screen {
+    background: var(--bg);
+    border: 2px dashed var(--border);
+    border-radius: var(--radius);
+    padding: 50px 24px;
+    text-align: center;
+    cursor: pointer;
+    margin: 20px 0;
+    transition: border-color 0.2s;
+  }
+  .cover-screen:hover { border-color: var(--accent); }
+  .cover-screen h3 {
+    font-size: 20px;
+    font-weight: 700;
+    margin-bottom: 8px;
+  }
+  .cover-screen p { color: var(--muted); font-size: 14px; }
+
+  .step-indicator {
+    display: flex;
+    justify-content: center;
+    gap: 6px;
+    margin: 16px 0 24px;
+  }
+  .step-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    transition: all 0.2s;
+  }
+  .step-dot.done { background: var(--success); border-color: var(--success); }
+  .step-dot.active { background: var(--accent); border-color: var(--accent); width: 20px; border-radius: 4px; }
+
+  .question-pair {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 16px 20px;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .q-arrow {
+    color: var(--accent2);
+    font-size: 20px;
+    flex-shrink: 0;
+  }
+  .q-text { font-size: 15px; line-height: 1.5; }
+  .q-text strong { color: var(--accent); font-weight: 700; }
+
+  .vote-option {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 14px 20px;
+    margin-bottom: 8px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    transition: all 0.15s;
+    font-size: 15px;
+    font-weight: 500;
+  }
+  .vote-option:hover { border-color: var(--accent); background: rgba(240,192,64,0.05); }
+  .vote-option.selected { border-color: var(--accent); background: rgba(240,192,64,0.1); }
+  .vote-option.disabled { opacity: 0.4; pointer-events: none; }
+  .vote-tick { color: var(--accent); font-size: 18px; display: none; }
+  .vote-option.selected .vote-tick { display: block; }
+
+  .vote-progress {
+    background: var(--surface2);
+    border-radius: 20px;
+    height: 8px;
+    margin: 6px 0;
+    overflow: hidden;
+  }
+  .vote-bar {
+    height: 100%;
+    background: var(--accent);
+    border-radius: 20px;
+    transition: width 0.4s;
+  }
+  .vote-result-row {
+    margin-bottom: 14px;
+  }
+  .vote-result-row .name-count {
+    display: flex;
+    justify-content: space-between;
+    font-size: 14px;
+    margin-bottom: 4px;
+    color: var(--text);
+  }
+  .vote-result-row .name-count span:last-child { color: var(--muted); }
+  .vote-result-row.winner .name-count { font-weight: 700; }
+  .vote-result-row.winner .vote-bar { background: var(--danger); }
+
+  .reveal-box {
+    border-radius: var(--radius);
+    padding: 32px 24px;
+    text-align: center;
+    margin: 16px 0;
+  }
+  .reveal-box.outsider-caught {
+    background: linear-gradient(160deg, rgba(224,90,43,0.15), var(--surface));
+    border: 1px solid rgba(224,90,43,0.4);
+  }
+  .reveal-box.outsider-escaped {
+    background: linear-gradient(160deg, rgba(61,191,122,0.15), var(--surface));
+    border: 1px solid rgba(61,191,122,0.4);
+  }
+  .reveal-box h2 {
+    font-size: 28px;
+    font-weight: 900;
+    margin: 12px 0 8px;
+  }
+  .reveal-box .emoji { font-size: 56px; }
+
+  .word-choices {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin: 20px 0;
+  }
+  .word-btn {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    color: var(--text);
+    font-family: 'Tajawal', sans-serif;
+    font-size: 17px;
+    font-weight: 600;
+    padding: 18px 12px;
+    cursor: pointer;
+    transition: all 0.15s;
+    text-align: center;
+  }
+  .word-btn:hover { border-color: var(--accent); background: rgba(240,192,64,0.08); transform: translateY(-1px); }
+  .word-btn.correct { background: rgba(61,191,122,0.15); border-color: var(--success); color: var(--success); }
+  .word-btn.wrong { background: rgba(224,90,90,0.1); border-color: var(--danger); color: var(--danger); }
+
+  .scoreboard {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .score-row {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 12px 16px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .score-row.first { border-color: rgba(240,192,64,0.5); background: rgba(240,192,64,0.07); }
+  .score-rank {
+    font-size: 20px;
+    width: 32px;
+    text-align: center;
+    flex-shrink: 0;
+  }
+  .score-name { flex: 1; font-weight: 600; font-size: 15px; }
+  .score-pts {
+    font-family: 'Cairo', sans-serif;
+    font-weight: 900;
+    font-size: 22px;
+    color: var(--accent);
+  }
+
+  .round-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: var(--surface2);
+    border-radius: var(--radius-sm);
+    padding: 10px 18px;
+    margin-bottom: 20px;
+    font-size: 14px;
+  }
+  .round-info span { color: var(--muted); }
+  .round-info strong { color: var(--text); }
+
+  .settings-row {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 16px;
+    background: var(--surface2);
+    border-radius: var(--radius-sm);
+    padding: 14px 16px;
+    border: 1px solid var(--border);
+  }
+  .settings-row label { flex: 1; font-size: 15px; }
+  .settings-row input[type="number"] {
+    width: 70px;
+    text-align: center;
+    padding: 8px;
+  }
+
+  .sep { height: 1px; background: var(--border); margin: 20px 0; }
+
+  .tag {
+    display: inline-block;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 4px 12px;
+    font-size: 12px;
+    color: var(--muted);
+  }
+  .tag.gold { background: rgba(240,192,64,0.12); border-color: rgba(240,192,64,0.3); color: var(--accent); }
+
+  .pulse {
+    animation: pulse 2s infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.6; }
+  }
+
+  .fade-in {
+    animation: fadeIn 0.35s ease;
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .shake {
+    animation: shake 0.4s ease;
+  }
+  @keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-8px); }
+    75% { transform: translateX(8px); }
+  }
+
+  .confetti-bar {
+    background: linear-gradient(90deg, var(--accent), var(--accent2), var(--success), var(--accent));
+    background-size: 200% 100%;
+    height: 4px;
+    border-radius: 2px;
+    margin-bottom: 24px;
+    animation: rainbow 3s linear infinite;
+  }
+  @keyframes rainbow {
+    0% { background-position: 0% 50%; }
+    100% { background-position: 200% 50%; }
+  }
+
+  .center { text-align: center; }
+  .mt8 { margin-top: 8px; }
+  .mt16 { margin-top: 16px; }
+  .mt24 { margin-top: 24px; }
+  .mb8 { margin-bottom: 8px; }
+  .muted { color: var(--muted); font-size: 14px; }
+
+  .two-btn {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-top: 12px;
+  }
+</style>
+</head>
+<body>
+<div class="game-wrap">
+  <div class="logo">
+    <h1>برا السالفة نسخة مرج علي 😮</h1>
+    <p>لعبة الخداع والذكاء</p>
+  </div>
+
+  <!-- SCREEN: Setup -->
+  <div id="screen-setup" class="screen active fade-in">
+    <div class="card">
+      <div class="card-title">⚙️ إعدادات اللعبة</div>
+      <div class="settings-row">
+        <label>عدد الجولات</label>
+        <input type="number" id="total-rounds" value="3" min="1" max="10">
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">👥 أضف اللاعبين <span class="badge">3 على الأقل</span></div>
+      <div class="input-row">
+        <button class="btn btn-secondary" onclick="addPlayer()" style="flex-shrink:0">+ أضف</button>
+        <input type="text" id="player-input" placeholder="اسم اللاعب..." onkeydown="if(event.key==='Enter')addPlayer()">
+      </div>
+      <div class="players-list" id="players-list"></div>
+    </div>
+
+    <button class="btn btn-primary" onclick="startGame()">🚀 ابدأ اللعبة</button>
+  </div>
+
+  <!-- SCREEN: Role Distribution -->
+  <div id="screen-roles" class="screen fade-in">
+    <div class="round-info">
+      <span>الجولة</span>
+      <strong id="role-round-label">1 / 3</strong>
+    </div>
+    <div class="card big-center" id="role-pass-prompt">
+      <h2 id="role-player-name">أحمد</h2>
+      <p class="muted mt8">اضغط لترى دورك — تأكد أن الآخرين لا يرون الشاشة</p>
+      <div class="cover-screen mt16" onclick="showRole()">
+        <h3>👁️ اضغط لترى دورك</h3>
+        <p>اضغط وأخفِ الشاشة عن الباقين</p>
+      </div>
+    </div>
+    <div class="card" id="role-revealed" style="display:none">
+      <div id="role-card-content"></div>
+      <button class="btn btn-primary mt16" onclick="nextRole()">فهمت ✓ — مرر للتالي</button>
+    </div>
+  </div>
+
+  <!-- SCREEN: Questions -->
+  <div id="screen-questions" class="screen fade-in">
+    <div class="round-info">
+      <span>الجولة</span>
+      <strong id="q-round-label">1 / 3</strong>
+    </div>
+    <div class="card">
+      <div class="card-title">🎤 ترتيب الأسئلة</div>
+      <p class="muted mb8">كل لاعب يسأل الشخص المحدد أمامه سؤالاً واحداً عن السالفة</p>
+      <div class="sep"></div>
+      <div id="questions-list"></div>
+    </div>
+    <button class="btn btn-primary" onclick="goToVoting()">تصويت 🗳️</button>
+  </div>
+
+  <!-- SCREEN: Voting -->
+  <div id="screen-voting" class="screen fade-in">
+    <div class="round-info">
+      <span>الجولة</span>
+      <strong id="vote-round-label">1 / 3</strong>
+    </div>
+    <div class="card" id="vote-card">
+      <div class="card-title">🗳️ <span id="voter-name">أحمد</span> — من تشك فيه؟</div>
+      <p class="muted mb8">اختر شخصاً واحداً تعتقد أنه برا السالفة</p>
+      <div id="vote-options"></div>
+      <button class="btn btn-primary mt16" id="vote-confirm-btn" onclick="confirmVote()" style="display:none">تأكيد التصويت ✓</button>
+    </div>
+    <div class="step-indicator" id="vote-steps"></div>
+  </div>
+
+  <!-- SCREEN: Vote Results -->
+  <div id="screen-vote-results" class="screen fade-in">
+    <div class="card">
+      <div class="card-title">📊 نتائج التصويت</div>
+      <div id="vote-results-list"></div>
+    </div>
+    <div id="reveal-section"></div>
+    <button class="btn btn-primary mt16" id="challenge-btn" onclick="goToChallenge()" style="display:none">🎯 تحدي برا السالفة!</button>
+    <button class="btn btn-primary mt16" id="next-round-btn" onclick="nextRound()" style="display:none">التالي ←</button>
+  </div>
+
+  <!-- SCREEN: Challenge -->
+  <div id="screen-challenge" class="screen fade-in">
+    <div class="card">
+      <div class="card-title">🎯 تحدي <span id="challenger-name"></span></div>
+      <p class="muted mb8">أنت برا السالفة! خمّن السالفة الصحيحة من بين الخيارات أدناه</p>
+      <div class="sep"></div>
+      <div class="word-choices" id="word-choices"></div>
+    </div>
+  </div>
+
+  <!-- SCREEN: Round End -->
+  <div id="screen-round-end" class="screen fade-in">
+    <button id="prank-btn" onclick="startPrankRound()" style="position:fixed;top:12px;right:12px;width:32px;height:32px;background:transparent;border:none;cursor:pointer;opacity:0;z-index:999;display:none;"> </button>
+    <div class="confetti-bar"></div>
+    <div class="card">
+      <div class="card-title center">🏅 نقاط الجولة</div>
+      <div id="round-points-list"></div>
+    </div>
+    <div class="card mt16">
+      <div class="card-title">🏆 الترتيب الحالي</div>
+      <div class="scoreboard" id="scoreboard-mid"></div>
+    </div>
+    <div class="two-btn mt16">
+      <button class="btn btn-secondary" onclick="endGame()">إنهاء اللعبة</button>
+      <button class="btn btn-primary" id="next-round-btn2" onclick="nextRound()">الجولة التالية ←</button>
+    </div>
+  </div>
+
+  <!-- SCREEN: Game Over -->
+  <div id="screen-gameover" class="screen fade-in">
+    <div class="confetti-bar"></div>
+    <div class="card big-center">
+      <div class="emoji">🏆</div>
+      <h2 id="winner-name" style="margin:12px 0 4px;font-size:28px;">أحمد</h2>
+      <p class="muted">الفائز بالبطولة!</p>
+    </div>
+    <div class="card mt16">
+      <div class="card-title">🏅 الترتيب النهائي</div>
+      <div class="scoreboard" id="scoreboard-final"></div>
+    </div>
+    <button class="btn btn-primary mt24" onclick="resetGame()">🔄 لعبة جديدة</button>
+  </div>
+</div>
+
+<script>
+const WORDS = [
+  'عبد العال','أحمد الحجّار','فؤاد','خالد يونس','علي ماهر',
+  'عادل','مالك إهاب','ديب الحلييييب','يحيى الحجّار','مصطفى الحجّار',
+  'مالك أحمد','يونس','مالك طلال','عمّو فرج','محمد الغطمي',
+  'حمزة يونس','Spider Man','Son Goku','ابليس','بيو لأحمد، يا شيطااان',
+  'ديب سُميا','جيفري ابستين','Luffy','هتلر','دونالد ترمب',
+  'محمود صلاح',
+];
+
+let state = {
+  players: [],
+  totalRounds: 3,
+  currentRound: 0,
+  scores: {},
+  currentWord: null,
+  outsiderIndex: null,
+  roleRevealStep: 0,
+  voteStep: 0,
+  votes: {},
+  roundPoints: {},
+  questionOrder: [],
+  outsiderCaught: false,
+  challengeWord: null,
+  decoyWords: [],
+};
+
+function $(id) { return document.getElementById(id); }
+
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  $(id).classList.add('active');
+  $(id).classList.add('fade-in');
+  setTimeout(() => $(id).classList.remove('fade-in'), 400);
+  window.scrollTo(0, 0);
+}
+
+function addPlayer() {
+  const inp = $('player-input');
+  const name = inp.value.trim();
+  if (!name) return;
+  if (state.players.includes(name)) { inp.classList.add('shake'); setTimeout(() => inp.classList.remove('shake'), 400); return; }
+  state.players.push(name);
+  inp.value = '';
+  renderPlayersList();
+  inp.focus();
+}
+
+function removePlayer(i) {
+  state.players.splice(i, 1);
+  renderPlayersList();
+}
+
+function renderPlayersList() {
+  const list = $('players-list');
+  list.innerHTML = state.players.map((p, i) => `
+    <div class="player-item fade-in">
+      <span class="player-num">${i + 1}</span>
+      <span style="flex:1">${p}</span>
+      <button class="btn btn-danger" onclick="removePlayer(${i})">✕ حذف</button>
+    </div>
+  `).join('');
+}
+
+function startGame() {
+  if (state.players.length < 3) { alert('يجب إضافة 3 لاعبين على الأقل!'); return; }
+  state.totalRounds = parseInt($('total-rounds').value) || 3;
+  state.scores = {};
+  state.players.forEach(p => state.scores[p] = 0);
+  state.currentRound = 0;
+  startRound();
+}
+
+function startRound() {
+  state.currentRound++;
+  state.votes = {};
+  state.roundPoints = {};
+  state.scoresAdded = false;
+  state.players.forEach(p => state.roundPoints[p] = 0);
+
+  const pickedIndex = Math.floor(Math.random() * WORDS.length);
+  state.currentWord = WORDS[pickedIndex];
+  const otherWords = WORDS.filter((_, i) => i !== pickedIndex);
+  state.decoyWords = shuffle(otherWords).slice(0, 7);
+  state.challengeWord = null;
+
+  state.outsiderIndex = Math.floor(Math.random() * state.players.length);
+  state.roleRevealStep = 0;
+  state.questionOrder = generateQuestions();
+
+  $('role-round-label').textContent = `${state.currentRound} / ${state.totalRounds}`;
+  $('q-round-label').textContent = `${state.currentRound} / ${state.totalRounds}`;
+  $('vote-round-label').textContent = `${state.currentRound} / ${state.totalRounds}`;
+
+  showRolePassPrompt();
+  showScreen('screen-roles');
+}
+
+function showRolePassPrompt() {
+  $('role-pass-prompt').style.display = 'block';
+  $('role-revealed').style.display = 'none';
+  $('role-player-name').textContent = state.players[state.roleRevealStep];
+}
+
+function showRole() {
+  const idx = state.roleRevealStep;
+  const player = state.players[idx];
+  const isOutsider = idx === state.outsiderIndex;
+  const content = $('role-card-content');
+
+  if (isOutsider) {
+    content.innerHTML = `
+      <div class="role-reveal outsider">
+        <span class="role-icon">🕵️</span>
+        <div class="role-word">برا السالفة!</div>
+        <div class="role-label">حاول تعرف السالفة بدون ما أحد يكتشفك 😈</div>
+      </div>
+    `;
+  } else {
+    content.innerHTML = `
+      <div class="role-reveal insider">
+        <span class="role-icon">🗣️</span>
+        <div class="role-word">${state.currentWord}</div>
+        <div class="role-label">هذي السالفة — لا تكشف اسمها الصريح</div>
+      </div>
+    `;
+  }
+
+  $('role-pass-prompt').style.display = 'none';
+  $('role-revealed').style.display = 'block';
+}
+
+function nextRole() {
+  state.roleRevealStep++;
+  if (state.roleRevealStep >= state.players.length) {
+    showQuestionsScreen();
+  } else {
+    showRolePassPrompt();
+  }
+}
+
+function generateQuestions() {
+  // Sattolo algorithm: كل شخص يسأل شخصاً مختلفاً عنه، وكل شخص يُسأل مرة واحدة فقط
+  const indices = state.players.map((_, i) => i);
+  const targets = [...indices];
+
+  // نخلط القائمة بـ Sattolo (يضمن أن لا أحد في مكانه الأصلي)
+  for (let i = targets.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * i); // i وليس i+1 هو سر الخوارزمية
+    [targets[i], targets[j]] = [targets[j], targets[i]];
+  }
+
+  // نخلط ترتيب السائلين بشكل عشوائي لعرضهم بترتيب مختلف كل جولة
+  const askers = shuffle([...indices]);
+
+  return askers.map(asker => ({ asker, target: targets[asker] }));
+}
+
+function showQuestionsScreen() {
+  const list = $('questions-list');
+  list.innerHTML = state.questionOrder.map((pair, i) => `
+    <div class="question-pair" style="animation-delay:${i * 0.05}s">
+      <span class="q-text"><strong>${state.players[pair.asker]}</strong> يسأل <strong>${state.players[pair.target]}</strong></span>
+      <span class="q-arrow">←</span>
+    </div>
+  `).join('');
+  showScreen('screen-questions');
+}
+
+function goToVoting() {
+  state.voteStep = 0;
+  showVoterCard();
+  showScreen('screen-voting');
+}
+
+function showVoterCard() {
+  const voter = state.players[state.voteStep];
+  $('voter-name').textContent = voter;
+
+  const opts = $('vote-options');
+  opts.innerHTML = state.players.map((p, i) => {
+    if (p === voter) return '';
+    return `<div class="vote-option" onclick="selectVote(this, '${p}')">
+      <span>${p}</span>
+      <span class="vote-tick">✓</span>
+    </div>`;
+  }).join('');
+
+  $('vote-confirm-btn').style.display = 'none';
+
+  const steps = $('vote-steps');
+  steps.innerHTML = state.players.map((_, i) => {
+    let cls = i < state.voteStep ? 'done' : i === state.voteStep ? 'active' : '';
+    return `<div class="step-dot ${cls}"></div>`;
+  }).join('');
+}
+
+let selectedVote = null;
+
+function selectVote(el, name) {
+  document.querySelectorAll('.vote-option').forEach(o => o.classList.remove('selected'));
+  el.classList.add('selected');
+  selectedVote = name;
+  $('vote-confirm-btn').style.display = 'block';
+}
+
+function confirmVote() {
+  if (!selectedVote) return;
+  const voter = state.players[state.voteStep];
+  state.votes[voter] = selectedVote;
+  selectedVote = null;
+  state.voteStep++;
+  if (state.voteStep >= state.players.length) {
+    showVoteResults();
+  } else {
+    showVoterCard();
+  }
+}
+
+function showVoteResults() {
+  const tally = {};
+  state.players.forEach(p => tally[p] = 0);
+  Object.values(state.votes).forEach(v => tally[v] = (tally[v] || 0) + 1);
+
+  const maxVotes = Math.max(...Object.values(tally));
+  const sorted = [...state.players].sort((a, b) => tally[b] - tally[a]);
+  const outsider = state.players[state.outsiderIndex];
+
+  const list = $('vote-results-list');
+  list.innerHTML = sorted.map(p => {
+    const pct = Math.round((tally[p] / state.players.length) * 100);
+    const isWinner = tally[p] === maxVotes;
+    return `<div class="vote-result-row ${isWinner ? 'winner' : ''}">
+      <div class="name-count"><span>${p} ${p === outsider ? '🕵️' : ''}</span><span>${tally[p]} صوت</span></div>
+      <div class="vote-progress"><div class="vote-bar" style="width:${pct}%"></div></div>
+    </div>`;
+  }).join('');
+
+  const outsiderVotes = tally[outsider] || 0;
+  state.outsiderCaught = outsiderVotes >= 1;
+  const rev = $('reveal-section');
+
+  if (state.outsiderCaught) {
+    rev.innerHTML = `
+      <div class="reveal-box outsider-caught fade-in">
+        <div class="emoji">😱</div>
+        <h2>اكتُشف ${outsider}!</h2>
+        <p class="muted">كان هو برا السالفة — لكن لديه فرصة أخيرة لتخمين السالفة</p>
+      </div>`;
+    state.players.forEach(p => {
+      if (state.votes[p] === outsider) {
+        state.roundPoints[p] = (state.roundPoints[p] || 0) + 1;
+      }
+    });
+  } else {
+    rev.innerHTML = `
+      <div class="reveal-box outsider-escaped fade-in">
+        <div class="emoji">😈</div>
+        <h2>${outsider} نجا!</h2>
+        <p class="muted">برا السالفة كان ${outsider} ولم يكتشفه أحد — يحصل على نقطة!</p>
+      </div>`;
+    state.roundPoints[outsider] = (state.roundPoints[outsider] || 0) + 1;
+  }
+
+  $('challenge-btn').style.display = 'block';
+  $('challenge-btn').onclick = goToChallenge;
+  $('next-round-btn').style.display = 'none';
+
+  showScreen('screen-vote-results');
+}
+
+function goToChallenge() {
+  const outsider = state.players[state.outsiderIndex];
+  $('challenger-name').textContent = outsider;
+
+  const allChoices = shuffle([state.currentWord, ...state.decoyWords]);
+  const container = $('word-choices');
+  container.innerHTML = allChoices.map(w => `
+    <button class="word-btn" onclick="chooseWord(this, '${w}')">${w}</button>
+  `).join('');
+
+  showScreen('screen-challenge');
+}
+
+function chooseWord(el, word) {
+  document.querySelectorAll('.word-btn').forEach(b => b.disabled = true);
+  const outsider = state.players[state.outsiderIndex];
+
+  if (word === state.currentWord) {
+    el.classList.add('correct');
+    state.roundPoints[outsider] = (state.roundPoints[outsider] || 0) + 1;
+    setTimeout(() => {
+      showRoundEnd();
+    }, 600);
+  } else {
+    el.classList.add('wrong');
+    document.querySelectorAll('.word-btn').forEach(b => {
+      if (b.textContent === state.currentWord) b.classList.add('correct');
+    });
+    setTimeout(() => {
+      showRoundEnd();
+    }, 800);
+  }
+}
+
+function showRoundEnd() {
+  if (!state.scoresAdded) {
+    Object.keys(state.roundPoints).forEach(p => {
+      state.scores[p] = (state.scores[p] || 0) + state.roundPoints[p];
+    });
+    state.scoresAdded = true;
+  }
+
+  const sorted = [...state.players].sort((a, b) => state.roundPoints[b] - state.roundPoints[a]);
+  const outsider = state.players[state.outsiderIndex];
+
+  $('round-points-list').innerHTML = `<div class="scoreboard">` + sorted.map(p => {
+    const pts = state.roundPoints[p] || 0;
+    return `<div class="score-row">
+      <span class="score-rank">${p === outsider ? '🕵️' : '🗣️'}</span>
+      <span class="score-name">${p}</span>
+      <span class="score-pts">+${pts}</span>
+    </div>`;
+  }).join('') + `</div>`;
+
+  renderScoreboard('scoreboard-mid');
+
+  if (state.currentRound >= state.totalRounds) {
+    $('next-round-btn2').style.display = 'none';
+    const endBtn = document.createElement('button');
+    endBtn.className = 'btn btn-primary';
+    endBtn.textContent = '🏆 عرض النتائج النهائية';
+    endBtn.style.marginTop = '12px';
+    endBtn.onclick = endGame;
+    $('screen-round-end').appendChild(endBtn);
+  } else {
+    $('next-round-btn2').style.display = 'block';
+    $('next-round-btn2').onclick = startRound;
+  }
+
+  showScreen('screen-round-end');
+  $('prank-btn').style.display = 'block';
+}
+
+function nextRound() {
+  $('prank-btn').style.display = 'none';
+  startRound();
+}
+
+function startPrankRound() {
+  $('prank-btn').style.display = 'none';
+
+  const PRANK_NAME = "فؤاد";
+
+  // تحقق من وجود فؤاد بين اللاعبين
+  const targetIndex = state.players.findIndex(p => p === PRANK_NAME);
+  if (targetIndex === -1) {
+    alert(`⚠️ لا يوجد لاعب اسمه "${PRANK_NAME}" في هذه الجولة!`);
+    $('prank-btn').style.display = 'block';
+    return;
+  }
+
+  // ابدأ جولة: السالفة = "فؤاد" وفؤاد نفسه هو برا السالفة
+  state.currentRound++;
+  state.votes = {};
+  state.roundPoints = {};
+  state.scoresAdded = false;
+  state.players.forEach(p => state.roundPoints[p] = 0);
+
+  state.currentWord = PRANK_NAME;
+  const otherWords = WORDS.filter(w => w !== PRANK_NAME);
+  state.decoyWords = shuffle(otherWords).slice(0, 7);
+  state.challengeWord = null;
+  state.outsiderIndex = targetIndex;
+  state.roleRevealStep = 0;
+  state.questionOrder = generateQuestions();
+
+  $('role-round-label').textContent = `${state.currentRound} / ${state.totalRounds}`;
+  $('q-round-label').textContent = `${state.currentRound} / ${state.totalRounds}`;
+  $('vote-round-label').textContent = `${state.currentRound} / ${state.totalRounds}`;
+
+  showRolePassPrompt();
+  showScreen('screen-roles');
+}
+
+function endGame() {
+  $('prank-btn').style.display = 'none';
+  renderScoreboard('scoreboard-final');
+  const topPlayer = [...state.players].sort((a, b) => state.scores[b] - state.scores[a])[0];
+  $('winner-name').textContent = topPlayer;
+  showScreen('screen-gameover');
+}
+
+function renderScoreboard(containerId) {
+  const sorted = [...state.players].sort((a, b) => state.scores[b] - state.scores[a]);
+  const medals = ['🥇', '🥈', '🥉'];
+  $(containerId).innerHTML = sorted.map((p, i) => `
+    <div class="score-row ${i === 0 ? 'first' : ''}">
+      <span class="score-rank">${medals[i] || (i + 1)}</span>
+      <span class="score-name">${p}</span>
+      <span class="score-pts">${state.scores[p]}</span>
+    </div>
+  `).join('');
+}
+
+function resetGame() {
+  state = {
+    players: [...state.players],
+    totalRounds: state.totalRounds,
+    currentRound: 0,
+    scores: {},
+    currentWord: null,
+    outsiderIndex: null,
+    roleRevealStep: 0,
+    voteStep: 0,
+    votes: {},
+    roundPoints: {},
+    questionOrder: [],
+    outsiderCaught: false,
+    challengeWord: null,
+    decoyWords: [],
+  };
+  state.players.forEach(p => state.scores[p] = 0);
+  renderPlayersList();
+  showScreen('screen-setup');
+}
+
+function shuffle(arr) {
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}
+</script>
+</body>
+</html>
